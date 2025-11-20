@@ -24,18 +24,14 @@ sprite Main {
                 if source-code.letter(i) == "\n" {
                     &comment = "false"
                 }
-            } else if (source-code.letter(i) == "_")
-                .or(("/" < source-code.letter(i)).and(source-code.letter(i) < ":"))
-            {
+            } else if "0123456789_".contains(source-code.letter(i)) {
                 &buffer = buffer.join(source-code.letter(i))
             } else {
                 if not(buffer == "") {
                     tokens.push(buffer)
                 }
                 &buffer = ""
-                if not((source-code.letter(i) == " ")
-                        .or(source-code.letter(i) == "\n"))
-                {
+                if not(" \n".contains(source-code.letter(i))) {
                     if source-code.letter(i) == "#" {
                         &comment = "true"
                     } else {
