@@ -88,7 +88,7 @@ sprite Main {
     }
 
     fn finish-modifier {
-        if "/\\".contains(parent()) {
+        if "/\\".contains(ast-ops.at(last(parser-stack))) {
             finish()
         }
     }
@@ -102,9 +102,5 @@ sprite Main {
     fn finish {
         ast-sizes.replace(index: last(parser-stack), with: length(ast-ops) - last(parser-stack) + 1)
         parser-stack.delete(index: length(parser-stack))
-    }
-
-    fn parent -> String {
-        ast-ops.at(last(parser-stack))
     }
 }
