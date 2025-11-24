@@ -11,6 +11,7 @@ sprite Main {
 
     fn when-flag-clicked {
         lex("3⍳ 10_20_30+ #This is a comment")
+        parse()
     }
 
     let tokens = [] as List[String]
@@ -43,5 +44,67 @@ sprite Main {
         if not(buffer == "") {
             tokens.push(buffer)
         }
+    }
+
+    let ast-ops = [] as List[String]
+    let ast-sizes = [] as List[Num]
+    let parser-stack = [] as List[Num]
+
+    fn parse {
+        for token length(tokens) {
+            let token = tokens.at(token)
+            if "(/\\".contains(token) { start(token) }
+            else if "{[".contains(token) { start(token) start("(") }
+            else if token == ")" { finish() finish-modifier() }
+            else if "}]".contains(token) { finish() finish() finish-modifier() }
+            else if token == "|" { finish() start("(") }
+            else if "+-×↧↥<≤=@▽,⧻⍳⇌⍏⍖·○".contains(token) {
+                start(token)
+                finish()
+                finish-modifier()
+            } else {
+                start("_")
+                let buffer = ""
+                for c length(token) {
+                    let c = token.letter(c)
+                    if c == "_" {
+                        if not(buffer == "") {
+                            start(buffer)
+                            finish()
+                            &buffer = ""
+                        }
+                    } else {
+                        &buffer = buffer.join(c)
+                    }
+                }
+                if not(buffer == "") {
+                    start(buffer)
+                    finish()
+                }
+                finish()
+                finish-modifier()
+            }
+        }
+    }
+
+    fn finish-modifier {
+        if "/\\".contains(parent()) {
+            finish()
+        }
+    }
+
+    fn start(_ op: String) {
+        ast-ops.push(op)
+        ast-sizes.push(0)
+        parser-stack.push(length(ast-ops))
+    }
+
+    fn finish {
+        ast-sizes.replace(index: last(parser-stack), with: length(ast-ops) - last(parser-stack) + 1)
+        parser-stack.delete(index: length(parser-stack))
+    }
+
+    fn parent -> String {
+        ast-ops.at(last(parser-stack))
     }
 }
