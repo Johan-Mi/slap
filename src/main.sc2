@@ -103,4 +103,37 @@ sprite Main {
         ast-sizes.replace(index: last(parser-stack), with: length(ast-ops) - last(parser-stack) + 1)
         parser-stack.delete(index: length(parser-stack))
     }
+
+    fn si(_ node: Num) -> Num {
+        let op = op(node)
+        if op == "(" {} # TODO
+        else if op == "_" { return 0 }
+        else if "+-×↧↥<≤=@▽,".contains(op) { return 2 }
+        else if "/\\".contains(op) {
+            # TODO
+            return 1
+        }
+        else if "⧻⍳⇌⍏⍖·○".contains(op) { return 1 }
+        else if op == "{" {} # TODO
+        else if op == "[" {} # TODO
+        else {} # Unknown op
+    }
+
+    fn so(_ node: Num) -> Num {
+        let op = op(node)
+        if op == "(" {} # TODO
+        else if "_+-×↧↥<≤=@▽,⧻⍳⇌⍏⍖·".contains(op) { return 1 }
+        else if "/\\".contains(op) {
+            # TODO
+            return 1
+        }
+        else if op == "○" { return 0 }
+        else if op == "{" {} # TODO
+        else if op == "[" {} # TODO
+        else {} # Unknown op
+    }
+
+    inline fn op(_ node: Num) -> String {
+        ast-ops.at(node)
+    }
 }
