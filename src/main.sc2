@@ -123,8 +123,12 @@ sprite Main {
                 until next == end {
                     let i = ast-i.at(next)
                     let o = ast-o.at(next)
-                    if o_ < i { &i_ = i_ + i - o_ }
-                    if i < o_ { &o_ = o_ + o - i } else { &o_ = o }
+                    if o_ < i {
+                        &i_ = i_ + i - o_
+                        &o_ = o
+                    } else {
+                        &o_ = o_ + o - i
+                    }
                     &next = next + ast-sizes.at(next)
                 }
                 node.set-signature(i_, o_)
