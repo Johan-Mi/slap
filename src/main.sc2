@@ -159,4 +159,9 @@ sprite Main {
     inline fn op(_ node: Num) -> String {
         ast-ops.at(node)
     }
+
+    fn die(_ message: String) {
+        say(message)
+        stop-all()
+    }
 }
