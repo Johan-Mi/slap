@@ -12,6 +12,7 @@ sprite Main {
     fn when-flag-clicked {
         lex("3⍳ 10_20_30+ #This is a comment")
         parse()
+        compute-signatures()
     }
 
     let tokens = [] as List[String]
