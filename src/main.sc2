@@ -179,8 +179,13 @@ sprite Main {
     fn x(_ node: Num) {
         let op = op(node)
         if op == "(" {} # TODO
-        else if op == "_" {} # TODO
-        else if op == "+" {} # TODO
+        else if op == "_" {
+            ptrs.push(length(heap) + 1)
+            sizes.push(ast-sizes.at(node) - 1)
+            for i last(sizes) {
+                heap.push(op(node + i))
+            }
+        } else if op == "+" {} # TODO
         else if op == "-" {} # TODO
         else if op == "×" {} # TODO
         else if op == "↧" {} # TODO
