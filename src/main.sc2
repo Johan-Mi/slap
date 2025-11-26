@@ -198,7 +198,7 @@ sprite Main {
         else if op == "⍖" {} # TODO
         else if op == "/" {} # TODO
         else if op == "\\" {} # TODO
-        else if op == "○" {} # TODO
+        else if op == "○" { pop(ptrs) pop(sizes) }
         else if op == "{" {} # TODO
         else if op == "[" {} # TODO
     }
