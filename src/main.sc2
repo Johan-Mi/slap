@@ -183,7 +183,7 @@ sprite Main {
             ptrs.push(length(heap) + 1)
             sizes.push(ast-sizes.at(node) - 1)
             for i last(sizes) {
-                heap.push(op(node + i))
+                heap.push(op(node + i).to-num())
             }
         } else if op == "+" {} # TODO
         else if op == "-" {} # TODO
