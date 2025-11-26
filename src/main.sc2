@@ -191,8 +191,11 @@ sprite Main {
         else if op == "@" {} # TODO
         else if op == "▽" {} # TODO
         else if op == "," {} # TODO
-        else if op == "⧻" {} # TODO
-        else if op == "⍳" {} # TODO
+        else if op == "⧻" {
+            heap.push(last(sizes))
+            ptrs.replace-last(with: length(heap))
+            sizes.replace-last(with: 1)
+        } else if op == "⍳" {} # TODO
         else if op == "⇌" {} # TODO
         else if op == "⍏" {} # TODO
         else if op == "⍖" {} # TODO
