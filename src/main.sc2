@@ -104,7 +104,7 @@ sprite Main {
 
     fn finish {
         ast-sizes.replace(index: last(parser-stack), with: length(ast-ops) - last(parser-stack) + 1)
-        parser-stack.delete(index: length(parser-stack))
+        pop(parser-stack)
     }
 
     fn compute-signatures {
