@@ -113,6 +113,7 @@ sprite Main {
         }
         for node length(ast-ops) {
             let node = length(ast-ops) - node + 1
+            let op = op(node)
             if op == "(" {
                 # TODO
             } else if op == "_" { node.set-signature(0, 1) }
