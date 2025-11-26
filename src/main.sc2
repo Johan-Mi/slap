@@ -200,8 +200,14 @@ sprite Main {
             heap.push(last(sizes))
             ptrs.replace-last(with: length(heap))
             sizes.replace-last(with: 1)
-        } else if op == "⍳" {} # TODO
-        else if op == "⇌" {} # TODO
+        } else if op == "⍳" {
+            if not(last(sizes) == 1) { die("invalid length for ⍳") }
+            sizes.replace-last(with: heap.at(last(ptrs)))
+            ptrs.replace-last(with: length(heap) + 1)
+            for i last(sizes) {
+                heap.push(i - 1)
+            }
+        } else if op == "⇌" {} # TODO
         else if op == "⍏" {} # TODO
         else if op == "⍖" {} # TODO
         else if op == "/" {} # TODO
