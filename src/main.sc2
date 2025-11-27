@@ -208,8 +208,14 @@ sprite Main {
             for i last(sizes) {
                 heap.push(i - 1)
             }
-        } else if op == "⇌" {} # TODO
-        else if op == "⍏" {} # TODO
+        } else if op == "⇌" {
+            let i = last(ptrs) + last(sizes)
+            repeat last(sizes) {
+                &i = i - 1
+                heap.push(heap.at(i))
+            }
+            ptrs.replace-last(with: length(heap) - last(sizes) + 1)
+        } else if op == "⍏" {} # TODO
         else if op == "⍖" {} # TODO
         else if op == "/" {} # TODO
         else if op == "\\" {} # TODO
