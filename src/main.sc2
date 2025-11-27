@@ -177,6 +177,7 @@ sprite Main {
     let sizes = [] as List[Num]
 
     fn x(_ node: Num) {
+        # Memory model: arrays are shared, so don't modify them in place.
         let op = op(node)
         if op == "(" {} # TODO
         else if op == "_" {
