@@ -190,8 +190,14 @@ sprite Main {
     fn x(_ node: Num) {
         # Memory model: arrays are shared, so don't modify them in place.
         let op = op(node)
-        if op == "(" {} # TODO
-        else if op == "_" {
+        if op == "(" {
+            let end = node + ast-sizes.at(node)
+            let next = node + 1
+            until next == end {
+                x(next)
+                &next = next + ast-sizes.at(next)
+            }
+        } else if op == "_" {
             ptrs.push(length(heap) + 1)
             sizes.push(ast-sizes.at(node) - 1)
             for i last(sizes) {
