@@ -13,6 +13,7 @@ sprite Main {
         lex("3⍳ 10_20_30+ #This is a comment")
         parse()
         compute-signatures()
+        x(1)
     }
 
     let tokens = [] as List[String]
