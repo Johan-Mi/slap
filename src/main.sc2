@@ -13,6 +13,9 @@ sprite Main {
         lex("3⍳ 10_20_30+ #This is a comment")
         parse()
         compute-signatures()
+        heap.delete-all()
+        ptrs.delete-all()
+        sizes.delete-all()
         x(1)
     }
 
@@ -55,6 +58,9 @@ sprite Main {
     let parser-stack = [] as List[Num]
 
     fn parse {
+        ast-ops.delete-all()
+        ast-sizes.delete-all()
+        parser-stack.delete-all()
         for token length(tokens) {
             let token = tokens.at(token)
             if "(/\\".contains(token) { start(token) }
@@ -109,6 +115,8 @@ sprite Main {
     }
 
     fn compute-signatures {
+        ast-i.delete-all()
+        ast-o.delete-all()
         for i length(ast-ops) {
             ast-i.push(0)
             ast-o.push(0)
