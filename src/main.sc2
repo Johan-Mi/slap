@@ -61,6 +61,7 @@ sprite Main {
         ast-ops.delete-all()
         ast-sizes.delete-all()
         parser-stack.delete-all()
+        start("(")
         for token length(tokens) {
             let token = tokens.at(token)
             if "(/\\".contains(token) { start(token) }
@@ -95,6 +96,7 @@ sprite Main {
                 finish-modifier()
             }
         }
+        finish()
     }
 
     fn finish-modifier {
