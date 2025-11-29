@@ -221,10 +221,10 @@ sprite Main {
         } else if op == "▽" {} # TODO
         else if op == "," {
             for i sizes.at(length(sizes) - 1) {
-                heap.push(heap.at(sizes.at(length(sizes) - 1) + i - 1))
+                heap.push(heap.at(ptrs.at(length(ptrs) - 1) + i - 1))
             }
             for i last(sizes) {
-                heap.push(heap.at(last(sizes) + i - 1))
+                heap.push(heap.at(last(ptrs) + i - 1))
             }
             sizes.replace-last(with: last(sizes) + sizes.at(length(sizes) - 1))
             sizes.delete(index: length(sizes) - 1)
