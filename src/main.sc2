@@ -213,23 +213,23 @@ sprite Main {
         else if op == "=" {} # TODO
         else if op == "@" {
             for i last(sizes) {
-                heap.push(heap.at(ptrs.at(length(ptrs) - 1) + heap.at(last(ptrs) + i - 1)))
+                heap.push(heap.at(ptrs.bat(1) + heap.at(last(ptrs) + i - 1)))
             }
             ptrs.replace-last(with: length(heap) - last(sizes) + 1)
-            ptrs.delete(index: length(ptrs) - 1)
-            sizes.delete(index: length(sizes) - 1)
+            ptrs.belete(index: 1)
+            sizes.belete(index: 1)
         } else if op == "▽" {} # TODO
         else if op == "," {
-            for i sizes.at(length(sizes) - 1) {
-                heap.push(heap.at(ptrs.at(length(ptrs) - 1) + i - 1))
+            for i sizes.bat(1) {
+                heap.push(heap.at(ptrs.bat(1) + i - 1))
             }
             for i last(sizes) {
                 heap.push(heap.at(last(ptrs) + i - 1))
             }
-            sizes.replace-last(with: last(sizes) + sizes.at(length(sizes) - 1))
-            sizes.delete(index: length(sizes) - 1)
+            sizes.replace-last(with: last(sizes) + sizes.bat(1))
+            sizes.belete(index: 1)
             ptrs.replace-last(with: length(heap) - last(sizes) + 1)
-            ptrs.delete(index: length(ptrs) - 1)
+            ptrs.belete(index: 1)
         } else if op == "⧻" {
             heap.push(last(sizes))
             ptrs.replace-last(with: length(heap))
@@ -264,5 +264,13 @@ sprite Main {
     fn die(_ message: String) {
         say(message)
         stop-all()
+    }
+
+    inline fn bat(_ comptime list: List[Num], _ index: Num) -> Num {
+        list.at(length(list) - index)
+    }
+
+    inline fn belete(_ comptime list: List[Num], index index: Num) {
+        list.delete(index: length(list) - index)
     }
 }
