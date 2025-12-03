@@ -203,7 +203,7 @@ sprite Main {
             for i last(sizes) {
                 heap.push(op(node + i).to-num())
             }
-        } else if "+-×↧↥".contains(op) {
+        } else if "+-×↧↥<≤=".contains(op) {
             let sa = sizes.bat(1)
             let sb = last(sizes)
             let size = sa
