@@ -203,15 +203,39 @@ sprite Main {
             for i last(sizes) {
                 heap.push(op(node + i).to-num())
             }
-        } else if op == "+" {} # TODO
-        else if op == "-" {} # TODO
-        else if op == "×" {} # TODO
-        else if op == "↧" {} # TODO
-        else if op == "↥" {} # TODO
-        else if op == "<" {} # TODO
-        else if op == "≤" {} # TODO
-        else if op == "=" {} # TODO
-        else if op == "@" {
+        } else if "+-×↧↥".contains(op) {
+            let sa = sizes.bat(1)
+            let sb = last(sizes)
+            let size = sa
+            if (sb == 0).or(sa < sb) { &size = sb }
+            for i size {
+                let a = heap.at(ptrs.bat(1) + (i - 1) % sa)
+                let b = heap.at(last(ptrs) + (i - 1) % sb)
+                if op == "+" { heap.push(a + b) }
+                else if op == "-" { heap.push(a - b) }
+                else if op == "×" { heap.push(a * b) }
+                else if op == "↧" {
+                    if a < b { heap.push(a) }
+                    else { heap.push(b) }
+                } else if op == "↥" {
+                    if a < b { heap.push(b) }
+                    else { heap.push(a) }
+                } else if op == "<" { # TODO: Add `Bool.to-num` to SC2
+                    if a < b { heap.push(1) }
+                    else { heap.push(0) }
+                } else if op == "≤" {
+                    if b < a { heap.push(0) }
+                    else { heap.push(1) }
+                } else {
+                    if a == b { heap.push(1) }
+                    else { heap.push(0) }
+                }
+            }
+            pop(ptrs)
+            pop(sizes)
+            ptrs.replace-last(with: length(heap) - size + 1)
+            sizes.replace-last(with: size)
+        } else if op == "@" {
             for i last(sizes) {
                 heap.push(heap.at(ptrs.bat(1) + heap.at(last(ptrs) + i - 1)))
             }
