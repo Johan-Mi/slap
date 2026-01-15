@@ -52,14 +52,14 @@ sprite Main {
     }
 
     let ast-ops = [] as List[String]
-    let ast-sizes = [] as List[Num]
+    let ast-ends = [] as List[Num]
     let ast-i = [] as List[Num]
     let ast-o = [] as List[Num]
     let parser-stack = [] as List[Num]
 
     fn parse {
         ast-ops.delete-all()
-        ast-sizes.delete-all()
+        ast-ends.delete-all()
         parser-stack.delete-all()
         start("(")
         for token length(tokens) {
@@ -107,12 +107,12 @@ sprite Main {
 
     fn start(_ op: String) {
         ast-ops.push(op)
-        ast-sizes.push(0)
+        ast-ends.push(0)
         parser-stack.push(length(ast-ops))
     }
 
     fn finish {
-        ast-sizes.replace(index: last(parser-stack), with: length(ast-ops) - last(parser-stack) + 1)
+        ast-ends.replace(index: last(parser-stack), with: length(ast-ops) + 1)
         pop(parser-stack)
     }
 
@@ -127,11 +127,10 @@ sprite Main {
             let node = length(ast-ops) - node + 1
             let op = op(node)
             if op == "(" {
-                let end = node + ast-sizes.at(node)
                 let next = node + 1
                 let i_ = 0
                 let o_ = 0
-                until next == end {
+                until next == ast-ends.at(node) {
                     let i = ast-i.at(next)
                     let o = ast-o.at(next)
                     if o_ < i {
@@ -140,7 +139,7 @@ sprite Main {
                     } else {
                         &o_ = o_ + o - i
                     }
-                    &next = next + ast-sizes.at(next)
+                    &next = ast-ends.at(next)
                 }
                 node.set-signature(i_, o_)
             } else if op == "_" { node.set-signature(0, 1) }
@@ -153,25 +152,23 @@ sprite Main {
             } else if "⧻⍳⇌⍏⍖·".contains(op) { node.set-signature(1, 1) }
             else if op == "○" { node.set-signature(1, 0) }
             else if op == "{" {
-                let end = node + ast-sizes.at(node)
                 let next = node + 1
                 let i = 0
                 let o = 0
-                until next == end {
+                until next == ast-ends.at(node) {
                     if i < ast-i.at(next) { &i = ast-i.at(next) }
                     &o = o + ast-o.at(next)
-                    &next = next + ast-sizes.at(next)
+                    &next = ast-ends.at(next)
                 }
                 node.set-signature(i, o)
             } else if op == "[" {
-                let end = node + ast-sizes.at(node)
                 let next = node + 1
                 let i = 0
                 let o = 0
-                until next == end {
+                until next == ast-ends.at(node) {
                     &i = i + ast-i.at(next)
                     &o = o + ast-o.at(next)
-                    &next = next + ast-sizes.at(next)
+                    &next = ast-ends.at(next)
                 }
                 node.set-signature(i, o)
             } else {} # Unknown op
@@ -191,15 +188,14 @@ sprite Main {
         # Memory model: arrays are shared, so don't modify them in place.
         let op = op(node)
         if op == "(" {
-            let end = node + ast-sizes.at(node)
             let next = node + 1
-            until next == end {
+            until next == ast-ends.at(node) {
                 x(next)
-                &next = next + ast-sizes.at(next)
+                &next = ast-ends.at(next)
             }
         } else if op == "_" {
             ptrs.push(length(heap) + 1)
-            sizes.push(ast-sizes.at(node) - 1)
+            sizes.push(ast-ends.at(node) - node - 1)
             for i last(sizes) {
                 heap.push(op(node + i).to-num())
             }
