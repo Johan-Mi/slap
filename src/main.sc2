@@ -270,8 +270,19 @@ sprite Main {
             ptrs.replace-last(with: length(heap) - last(sizes) + 1)
         } else if op == "⍏" {} # TODO
         else if op == "⍖" {} # TODO
-        else if op == "/" {} # TODO
-        else if op == "\\" {} # TODO
+        else if op == "/" {
+            let ptr = last(ptrs)
+            let size = last(sizes)
+            pop(ptrs)
+            pop(sizes)
+            for i size {
+                let a = ptr.at(i - 1)
+                heap.push(a)
+                ptrs.push(length(heap))
+                sizes.push(1)
+                x(node + 1)
+            }
+        } else if op == "\\" {} # TODO
         else if op == "○" { pop(ptrs) pop(sizes) }
         else if op == "{" {} # TODO
         else if op == "[" {} # TODO
