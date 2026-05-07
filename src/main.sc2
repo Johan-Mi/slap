@@ -10,8 +10,7 @@ sprite Main {
     }
 
     fn when-flag-clicked {
-        lex("3⍳ 10_20_30+ #This is a comment")
-        parse()
+        parse("3⍳ 10_20_30+ #This is a comment")
         compute-signatures()
         heap.delete-all()
         ptrs.delete-all()
@@ -19,10 +18,17 @@ sprite Main {
         x(1)
     }
 
-    let tokens = [] as List[String]
+    let ast-ops = [] as List[String]
+    let ast-ends = [] as List[Num]
+    let ast-i = [] as List[Num]
+    let ast-o = [] as List[Num]
+    let parser-stack = [] as List[Num]
 
-    fn lex(_ source-code: String) {
-        tokens.delete-all()
+    fn parse(_ source-code: String) {
+        ast-ops.delete-all()
+        ast-ends.delete-all()
+        parser-stack.delete-all()
+        start("(")
         let buffer = ""
         let comment = "false"
         for i length(source-code) {
@@ -34,69 +40,56 @@ sprite Main {
                 &buffer = buffer.join(source-code.letter(i))
             } else {
                 if not(buffer == "") {
-                    tokens.push(buffer)
+                    parse(token: buffer)
                 }
                 &buffer = ""
                 if not(" \n".contains(source-code.letter(i))) {
                     if source-code.letter(i) == "#" {
                         &comment = "true"
                     } else {
-                        tokens.push(source-code.letter(i))
+                        parse(token: source-code.letter(i))
                     }
                 }
             }
         }
         if not(buffer == "") {
-            tokens.push(buffer)
-        }
-    }
-
-    let ast-ops = [] as List[String]
-    let ast-ends = [] as List[Num]
-    let ast-i = [] as List[Num]
-    let ast-o = [] as List[Num]
-    let parser-stack = [] as List[Num]
-
-    fn parse {
-        ast-ops.delete-all()
-        ast-ends.delete-all()
-        parser-stack.delete-all()
-        start("(")
-        for token length(tokens) {
-            let token = tokens.at(token)
-            if "(/\\".contains(token) { start(token) }
-            else if "{[".contains(token) { start(token) start("(") }
-            else if token == ")" { finish() finish-modifier() }
-            else if "}]".contains(token) { finish() finish() finish-modifier() }
-            else if token == "|" { finish() start("(") }
-            else if "+-×↧↥<≤=@▽,⧻⍳⇌⍏⍖·○".contains(token) {
-                start(token)
-                finish()
-                finish-modifier()
-            } else {
-                start("_")
-                let buffer = ""
-                for c length(token) {
-                    let c = token.letter(c)
-                    if c == "_" {
-                        if not(buffer == "") {
-                            start(buffer)
-                            finish()
-                            &buffer = ""
-                        }
-                    } else {
-                        &buffer = buffer.join(c)
-                    }
-                }
-                if not(buffer == "") {
-                    start(buffer)
-                    finish()
-                }
-                finish()
-                finish-modifier()
-            }
+            parse(token: buffer)
         }
         finish()
+    }
+
+    fn parse(token token: String) {
+        if "(/\\".contains(token) { start(token) }
+        else if "{[".contains(token) { start(token) start("(") }
+        else if token == ")" { finish() finish-modifier() }
+        else if "}]".contains(token) { finish() finish() finish-modifier() }
+        else if token == "|" { finish() start("(") }
+        else if "+-×↧↥<≤=@▽,⧻⍳⇌⍏⍖·○".contains(token) {
+            start(token)
+            finish()
+            finish-modifier()
+        } else {
+            start("_")
+            let buffer = ""
+            for c length(token) {
+                let c = token.letter(c)
+                if c == "_" {
+                    if not(buffer == "") {
+                        start(buffer)
+                        finish()
+                        &buffer = ""
+                    }
+                } else {
+                    &buffer = buffer.join(c)
+                }
+            }
+            if not(buffer == "") {
+                start(buffer)
+                finish()
+            }
+            finish()
+            finish-modifier()
+        }
     }
 
     fn finish-modifier {
