@@ -59,9 +59,8 @@ sprite Main {
     }
 
     fn parse(token token: String) {
-        if "(/\\".contains(token) { start(token) }
+        if "/\\".contains(token) { start(token) }
         else if "{[".contains(token) { start(token) start("(") }
-        else if token == ")" { finish() finish-modifier() }
         else if "}]".contains(token) { finish() finish() finish-modifier() }
         else if token == "|" { finish() start("(") }
         else if "+-×↧↥<≤=@▽,⧻⍳⇌⍏⍖·○".contains(token) {
